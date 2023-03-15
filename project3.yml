@@ -1,0 +1,39 @@
+---
+- name: copy web.html
+  hosts: all
+  vars_files: vars/vars.yml
+  tasks:
+   - name: checkfiles
+     stat:
+      path: /home/user9/file1
+     register: file
+     tags: 
+      - project1
+      - project2
+   - name: create files
+     shell: "touch /home/user9/{{item}}"
+     loop:
+      - file1
+      - file2
+      - file3
+      - file4
+      - file5
+     when: not file.stat.exists
+     tags: 
+      - project1
+      - project2
+
+   - name: regis loop 
+     shell: "echo {{item}}"
+     loop:
+      - "one"
+      - "two"
+     register: echo
+     changed_when: echo.stdout != "one"
+     tags: project2
+
+   - name: debug
+     debug:
+      var : echo             
+     tags: project2
+

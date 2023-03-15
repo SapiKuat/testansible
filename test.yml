@@ -1,0 +1,17 @@
+---
+- name: copy web.html
+  hosts: target
+  vars_files: vars/vars.yml
+  tasks:
+   - name: check if a page is alive
+     uri:
+      url: http://10.184.0.22/app.html
+      return_content: true
+     register: this
+     failed_when: "'app' not in this.content"
+   - name: debug
+     debug:
+      var: this
+      var: ansible_facts['os_family']
+
+
